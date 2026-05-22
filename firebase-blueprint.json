@@ -1,0 +1,26 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Represents a user profile with shopping cart details, wishlist, and shipping variables.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth unique identifier" },
+        "email": { "type": "string", "description": "Email address associated with the user" },
+        "userName": { "type": "string", "description": "Full display username" },
+        "role": { "type": "string", "enum": ["customer", "admin"], "description": "User access level privilege" },
+        "joinedAt": { "type": "string", "description": "Timestamp indication of user join" },
+        "cart": { "type": "array", "description": "User cart stored items array" },
+        "wishlist": { "type": "array", "description": "Array list of product IDs on customer wishlist" },
+        "addresses": { "type": "array", "description": "Array of saved addresses" }
+      },
+      "required": ["email", "userName", "role"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile records indexed by auth UID containing secure preferences and operations."
+    }
+  }
+}

@@ -1,0 +1,62 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    //catch all safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    //check if logged in
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    //check if owner of record
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    //check admin status
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.uid == "VELm81bBVdRTpoxzETw4whzuo9C3" ||
+        request.auth.token.email == "admin@youthtech.com" ||
+        request.auth.token.email == "baijusudarshan@gmail.com" ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin")
+      );
+    }
+
+    //validate structure
+    function isValidUserProfile(data) {
+      return data.email is string &&
+             data.email.size() > 0 &&
+             data.email.size() <= 256 &&
+             data.userName is string &&
+             data.userName.size() > 0 &&
+             data.userName.size() <= 128 &&
+             data.role is string &&
+             (data.role == "customer" || data.role == "admin");
+    }
+
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
+      
+      allow create: if isOwner(userId) && isValidUserProfile(request.resource.data) && (
+        request.resource.data.role == "customer" ||
+        request.auth.uid == "VELm81bBVdRTpoxzETw4whzuo9C3" ||
+        request.auth.token.email == "admin@youthtech.com" ||
+        request.auth.token.email == "baijusudarshan@gmail.com"
+      );
+
+      allow update: if isOwner(userId) && isValidUserProfile(request.resource.data) && (
+        (request.resource.data.role == resource.data.role) ||
+        isAdmin()
+      );
+
+      allow delete: if isAdmin();
+    }
+  }
+}

@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", var(--font-sans);
+  --font-mono: "JetBrains Mono", var(--font-mono);
+
+  /* Map indigo to premium tech blue */
+  --color-indigo-50: var(--color-blue-50);
+  --color-indigo-100: var(--color-blue-100);
+  --color-indigo-200: var(--color-blue-200);
+  --color-indigo-300: var(--color-blue-300);
+  --color-indigo-400: var(--color-blue-400);
+  --color-indigo-500: var(--color-blue-500);
+  --color-indigo-600: var(--color-blue-600);
+  --color-indigo-650: var(--color-blue-600);
+  --color-indigo-700: var(--color-blue-700);
+  --color-indigo-800: var(--color-blue-800);
+  --color-indigo-900: var(--color-blue-900);
+  --color-indigo-950: var(--color-blue-950);
+
+  /* Map slate in dark mode to the requested #09090b */
+  --color-slate-950: #09090b;
+  --color-slate-900: #18181b;
+  --color-slate-800: #27272a;
+}
+
+/* Custom layout and geometric styling classes from Geometric Balance theme */
+.glass-card {
+  background: rgba(24, 24, 27, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-card-light {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.stat-value {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.glow-blue {
+  box-shadow: 0 0 25px rgba(59, 130, 246, 0.15);
+}
+
+/* Base custom styles to enforce standard fonts and card classes in dark/light mode */
+.dark .glass-card-adaptive {
+  background: rgba(24, 24, 27, 0.75) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(12px);
+}
+
+.glass-card-adaptive {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(12px);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Custom geometric layout decoration values */
+.geometric-border-top {
+  border-top: 2px solid rgba(59, 130, 246, 0.2);
+}
+
+.geometric-border-top-active {
+  border-top: 2px solid rgba(59, 130, 246, 0.85);
+}
+
+/* Monospace overrides for specifications numbers & parameters */
+.font-mono-numeric {
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+}
