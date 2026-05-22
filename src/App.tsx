@@ -16,7 +16,9 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   updateProfile,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  signInWithPopup,
+  GoogleAuthProvider
 } from "firebase/auth";
 import { Product, Banner } from "./types";
 import {
@@ -209,7 +211,23 @@ function AppContent() {
   };
 
   const executeGoogleLogin = async () => {
-    setAuthError("Google Login is disabled. Please use email and password to log in or create an account.");
+    setAuthError("");
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: "select_account" });
+    try {
+      localStorage.setItem("pending_role", selectedRole);
+      const result = await signInWithPopup(auth, provider);
+      if (result.user) {
+        setShowAuthModal(false);
+      }
+    } catch (err: any) {
+      console.error("Google Sign-In failed", err);
+      if (err.code === "auth/popup-closed-by-user") {
+        setAuthError("Google authentication popup closed before completing. Please try again.");
+      } else {
+        setAuthError(err.message || "Failed to sign in using Google.");
+      }
+    }
   };
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
@@ -740,7 +758,7 @@ function AppContent() {
                   className="h-11 w-full border border-slate-200 hover:bg-slate-50 dark:border-slate-800/80 rounded-xl text-xs font-bold tracking-wide cursor-pointer flex items-center justify-center space-x-2 shadow-sm"
                 >
                   <svg className="w-4 h-4 mr-1" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5.04c1.62 0 3.08.56 4.22 1.65l3.15-3.15C17.45 1.73 14.92 1 12 1 7.35 1 3.39 3.65 1.39 7.5l3.81 2.95C6.12 7.23 8.84 5.04 12 5.04z"/><path fill="#4285F4" d="M23.49 12.27c0-.81-.07-1.59-.2-2.36H12v4.46h6.44c-.28 1.47-1.11 2.71-2.36 3.55l3.66 2.84c2.14-1.97 3.75-4.87 3.75-8.49z"/><path fill="#FBBC05" d="M5.2 14.45c-.24-.72-.38-1.5-.38-2.3s.14-1.58.38-2.3L1.39 6.9c-.83 1.66-1.3 3.52-1.3 5.5s.47 3.84 1.3 5.5l3.81-2.95z"/><path fill="#34A853" d="M12 18.96c-3.16 0-5.88-2.19-6.8-5.41L1.39 16.5c2 3.85 5.96 6.5 10.61 6.5 2.92 0 5.61-.98 7.55-2.67l-3.66-2.84c-1.04.7-2.38 1.47-3.89 1.47z"/></svg>
-                  <span>Google Credentials access</span>
+                  <span>Continue with Google</span>
                 </button>
 
                 <div className="text-center text-[10px] text-slate-400">
